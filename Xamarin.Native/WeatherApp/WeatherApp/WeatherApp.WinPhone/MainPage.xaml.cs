@@ -22,8 +22,6 @@ namespace WeatherApp.WinPhone
     /// </summary>
     public sealed partial class MainPage : Page
     {
-        int count = 1;
-
         public MainPage()
         {
             this.InitializeComponent();
@@ -31,25 +29,21 @@ namespace WeatherApp.WinPhone
             this.NavigationCacheMode = NavigationCacheMode.Required;
         }
 
-        /// <summary>
-        /// Invoked when this page is about to be displayed in a Frame.
-        /// </summary>
-        /// <param name="e">Event data that describes how this page was reached.
-        /// This parameter is typically used to configure the page.</param>
-        protected override void OnNavigatedTo(NavigationEventArgs e)
+        private async void GetWeatherButton_Click(object sender, RoutedEventArgs e)
         {
-            // TODO: Prepare page for display here.
-
-            // TODO: If your application contains multiple pages, ensure that you are
-            // handling the hardware Back button by registering for the
-            // Windows.Phone.UI.Input.HardwareButtons.BackPressed event.
-            // If you are using the NavigationHelper provided by some templates,
-            // this event is handled for you.
-            Button.Click += delegate
+            if (!String.IsNullOrEmpty(zipCodeEntry.Text))
             {
-                var title = string.Format("{0} clicks!", count++);
-                Button.Content = title;
-            };
+                Weather weather = await Core.GetWeather(zipCodeEntry.Text);
+                locationText.Text = weather.Title;
+                tempText.Text = weather.Temperature;
+                windText.Text = weather.Wind;
+                visibilityText.Text = weather.Visibility;
+                humidityText.Text = weather.Humidity;
+                sunriseText.Text = weather.Sunrise;
+                sunsetText.Text = weather.Sunset;
+
+                weatherBtn.Content = "Search Again";
+            }
         }
     }
 }
